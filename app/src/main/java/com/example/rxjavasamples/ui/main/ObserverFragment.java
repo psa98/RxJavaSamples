@@ -52,25 +52,52 @@ public class ObserverFragment extends Fragment {
 
     private void initListeners() {
         binding.clickButton.setOnClickListener(v -> {
-            clickCounter++;
-            viewModel.onClick(v, clickCounter);
+            reloadParams();
+            viewModel.onClick(v, 1);
         });
         binding.errorButton.setOnClickListener(v -> {
+            reloadParams();
             clickCounter = 0;
-            viewModel.onClick(v, clickCounter);
+            viewModel.onClick(v, 0);
         });
         binding.completeButton.setOnClickListener(v -> {
+            reloadParams();
             clickCounter = 0;
-            viewModel.onClick(v, clickCounter);
+            viewModel.onClick(v, 0);
         });
     }
 
     private void initObservers() {
-        viewModel.allTicks.observe(this.getViewLifecycleOwner(), value -> {
-            binding.ticksCount.setText(value);
-        });
+        viewModel.allTicks.observe(this.getViewLifecycleOwner(),
+                value -> binding.ticksCount.setText(value));
+        viewModel.logStringData.observe(this.getViewLifecycleOwner(),
+                value -> binding.clicksLog.setText(value));
+    }
 
 
+
+    @SuppressWarnings("ConstantConditions")
+    private void reloadParams() {
+        try {
+            viewModel.skipParam = Integer.parseInt(binding.howManySkipped.getText().toString());
+            viewModel.debounceParam = Integer.parseInt(binding.debounce.getText().toString());
+            viewModel.takeParam = Integer.parseInt(binding.howManyClicks.getText().toString());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if (viewModel.takeParam<=0) {
+            viewModel.takeParam = 2; //min number
+            binding.howManyClicks.setText("2");
+        }
+
+        if (viewModel.debounceParam<=0) {
+            viewModel.debounceParam = 0;
+            binding.debounce.setText("0");
+        }
+        if (viewModel.skipParam<=0) {
+            viewModel.skipParam = 0;
+            binding.howManySkipped.setText("0");
+        }
     }
 
     @Override
