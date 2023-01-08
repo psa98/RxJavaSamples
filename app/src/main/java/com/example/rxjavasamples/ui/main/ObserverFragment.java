@@ -19,6 +19,8 @@ import com.example.rxjavasamples.databinding.FragmentObservableBinding;
 public class ObserverFragment extends Fragment {
 
 
+    int clickCounter = 0;
+
     private ObserverViewModel viewModel;
     private FragmentObservableBinding binding;
 
@@ -50,13 +52,16 @@ public class ObserverFragment extends Fragment {
 
     private void initListeners() {
         binding.clickButton.setOnClickListener(v -> {
-            viewModel.onClick(v);
+            clickCounter++;
+            viewModel.onClick(v, clickCounter);
         });
         binding.errorButton.setOnClickListener(v -> {
-            viewModel.onClick(v);
+            clickCounter = 0;
+            viewModel.onClick(v, clickCounter);
         });
         binding.completeButton.setOnClickListener(v -> {
-            viewModel.onClick(v);
+            clickCounter = 0;
+            viewModel.onClick(v, clickCounter);
         });
     }
 
