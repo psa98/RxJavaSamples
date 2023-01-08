@@ -12,18 +12,18 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.rxjavasamples.R;
 
-public class BlankFragment extends Fragment {
+public class OtherFragment extends Fragment {
 
     private ObserverViewModel mViewModel;
 
-    public static BlankFragment newInstance() {
-        return new BlankFragment();
+    public static OtherFragment newInstance() {
+        return new OtherFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_blank, container, false);
+        return inflater.inflate(R.layout.fragment_other, container, false);
     }
 
     @Override

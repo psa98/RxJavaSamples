@@ -2,8 +2,6 @@ package com.example.rxjavasamples.ui.main;
 
 import static com.example.rxjavasamples.MainActivity.TAG;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 
@@ -16,7 +14,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableEmitter;
 import io.reactivex.rxjava3.disposables.Disposable;
 
-public class ObserverViewModel extends ViewModel {
+public class OtherViewModel extends ViewModel {
 
 
     MutableLiveData<String> allTicks = new MutableLiveData<>("Not subscribed");
@@ -32,9 +30,7 @@ public class ObserverViewModel extends ViewModel {
             //.distinct()
             //.groupBy()
             .skip(2)
-            .doOnSubscribe(disposable -> {
-                allTicks.postValue("Subscribed, waiting");
-            })
+
             .doOnNext(i -> {
                 Log.e(TAG, "onNext: =" + i);
                 lastValue += i;
@@ -63,23 +59,15 @@ public class ObserverViewModel extends ViewModel {
         if (tag.equals("error")) {
             if (keyObserver != null && !keyObserver.isDisposed())
                 keyObserver.onError(new IllegalStateException());
-            resubscribe();
+            dispose.dispose();
+            dispose = clickObservable.subscribe(); //переподписка
         }
         if (tag.equals("complete")) {
             if (keyObserver != null && !keyObserver.isDisposed())
                 keyObserver.onComplete();
-
-            resubscribe();
-        }
-    }
-
-    private void resubscribe() {
-        Handler handler = new Handler(Looper.myLooper());
-        handler.postDelayed((Runnable) () -> {
             dispose.dispose();
-            dispose = clickObservable.subscribe();
-        }, 2000);
-        //переподписка через 2 секунды
+            dispose = clickObservable.subscribe(); //переподписка
+        }
     }
 
 }
