@@ -21,9 +21,12 @@ import io.reactivex.rxjava3.disposables.Disposable;
 public class ObservableViewModel extends ViewModel {
 
     public static final int DEFAULT_TAKE = 15;
-    int debounceParam = 200;
+    public static final int DEFAULT_DEBOUNCE = 200;
+    public static final int RESUBSCRIBE_TIME = 2000;
+    public static final int DEFAULT_SKIP = 1;
+    int debounceParam = DEFAULT_DEBOUNCE;
     int takeParam = DEFAULT_TAKE;
-    int skipParam = 1;
+    int skipParam = DEFAULT_SKIP;
     MutableLiveData<String> allTicks = new MutableLiveData<>("Not subscribed");
     MutableLiveData<String> logStringData = new MutableLiveData<>("...");
     String logString ="...";
@@ -125,7 +128,6 @@ public class ObservableViewModel extends ViewModel {
         if (dispose == null || dispose.isDisposed()){
             dispose = clickObservable.subscribe();
             chainedObservable.subscribe();}
-
     }
 
     void onClick(View button) {
@@ -154,7 +156,7 @@ public class ObservableViewModel extends ViewModel {
             clickObservable =initObservable(); //подписываемся с новыми параметрами
             dispose = clickObservable.subscribe();
             chainedObservable.subscribe();
-        }, 2000);
+        }, RESUBSCRIBE_TIME);
         //переподписка осуществляется через 2 секунды после OnError, OnComplete.
     }
 

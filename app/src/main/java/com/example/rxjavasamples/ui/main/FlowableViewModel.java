@@ -24,7 +24,9 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class FlowableViewModel extends ViewModel {
 
     public static final int DEFAULT_TAKE = 6;
-    int delayParam = 1000;
+    public static final int DEFAULT_DELAY = 1000;
+    public static final int RESUBSCRIBE_TIME = 1000;
+    int delayParam = DEFAULT_DELAY;
     int takeParam = DEFAULT_TAKE;
     MutableLiveData<String> allTicks = new MutableLiveData<>("Not subscribed");
     MutableLiveData<String> logStringData = new MutableLiveData<>("...");
@@ -133,18 +135,14 @@ public class FlowableViewModel extends ViewModel {
         Flowable<Integer> copyFlowable = flowable.share();
         totals= copyFlowable
                 .toSortedList()
-                .doOnSuccess(list->{
-                    postInLog("Totals list:\n"+list,false);
-                });
+                .doOnSuccess(list-> postInLog("Totals list:\n"+list,false));
         totalSum = copyFlowable.reduce((acc, item) -> {
             acc += item;
             return acc;
             /*Maybe/Single объект имеет сокращенный набор операторов, в частности doOnSuccess(value)
             *  вместо doOnNext|onComplete, который у Maybe может быть никогда не вызван
             */
-            }).doOnSuccess(sum->{
-            postInLog("Total sum:\n"+sum,false);
-        })
+            }).doOnSuccess(sum-> postInLog("Total sum:\n"+sum,false))
            /* Maybe может быть преобразован в Single*/
             .toSingle();
         return flowable;
@@ -163,7 +161,7 @@ public class FlowableViewModel extends ViewModel {
     }
 
     void startFlow(){
-        clickFlowable.subscribe();
+        dispose = clickFlowable.subscribe();
         totals.subscribe();
         totalSum.subscribe();
     }
@@ -193,10 +191,8 @@ public class FlowableViewModel extends ViewModel {
             if (dispose != null && !dispose.isDisposed())
                 dispose.dispose();
             clickFlowable =initFlowable(); //подписываемся с новыми параметрами
-            dispose = clickFlowable.subscribe();
-            totals.subscribe();
-            totalSum.subscribe();
-        }, 1000);
+            startFlow();
+        }, RESUBSCRIBE_TIME);
         //переподписка через 1 секундy
     }
 
