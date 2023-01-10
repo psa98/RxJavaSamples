@@ -143,7 +143,7 @@ public class FlowableViewModel extends ViewModel {
             *  вместо doOnNext|onComplete, который у Maybe может быть никогда не вызван
             */
             }).doOnSuccess(sum-> postInLog("Total sum:\n"+sum,false))
-           /* Maybe может быть преобразован в Single*/
+           /* Maybe может быть преобразован  в Single*/
             .toSingle();
         return flowable;
     }

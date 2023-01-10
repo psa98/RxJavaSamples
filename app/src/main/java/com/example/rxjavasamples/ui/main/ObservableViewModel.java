@@ -44,7 +44,7 @@ public class ObservableViewModel extends ViewModel {
      */
     ObservableEmitter<Integer> keyObserver;
 
-    /* создаваемый объект Observable c изучаемыми свойствами
+    /* создаваемый объект Observable  c изучаемыми свойствами
      */
     Observable<Integer> clickObservable = initObservable();
     /* сцепленный с ним  объект Observable, получающий те же события
