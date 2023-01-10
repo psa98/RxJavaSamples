@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.FlowableEmitter;
@@ -82,30 +83,39 @@ FlowableViewModel extends ViewModel {
                 *  перенесет обработку в нужные фоновые пулы потоков.
                 */
                 .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
                 /*
                 Этот оператор вызывается при подписке, позволяя сохранить Disposable
                 и отслеживать жизненный цикл Flowable/Observable
                 */
                 .doOnSubscribe(disposable -> allTicks.postValue("Subscribed, waiting"))
                 /* Основной оператор, выполняющий полезную обработку поступающих данных
-                 *  В данном случае выполняется вывод данных в лог имитирущий
-                 *  медленную их обработку  и через лайфдату в поле вывода сразу
+                 *  В данном случае выполняется вывод данных через лайфдату в поле вывода
+                 * на главном потоке
                  */
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(i -> {
                     counter++;
                     lastValue = i;
                     allTicks.postValue("Ticks count = "+counter+
                             ", last random value =" + lastValue);
+                /* Дополнительный оператор, выполняющий полезную обработку поступающих данных
+                 *  В данном случае выполняется вывод данных в лог имитирущий
+                 *  медленную их обработку на пуле фоновых потоков
+                 */
+                }).observeOn(Schedulers.io())
+                .doAfterNext(i -> {
                     @SuppressLint("DefaultLocale")
-                    String s = String.format("Click# %d, value=%d, %s",counter,
-                            lastValue, timestampDateShort());
-                    postInLog(s,true);
+                    String s = String.format("value=%d, %s",
+                            i, timestampDateShort());
+                    postInLog (s,true);
+                })
+
                 /* Завершающий оператор. После вызова onComplete повторная передача
-                * onNext будет игнорироваться, повторные onComplete|onError вызовут
-                * ошибку
-                */
-                }).doOnComplete(() -> {
+                 * onNext будет игнорироваться, повторные onComplete|onError вызовут
+                 * ошибку. Операторы выполняются в последнем указанном потоке
+                 */
+                .doOnComplete(() -> {
                     allTicks.postValue("Final ticks count =" + counter + "\nDone! ");
                     lastValue = 0;
                     Log.i(TAG, "Thread: ="+Thread.currentThread());
