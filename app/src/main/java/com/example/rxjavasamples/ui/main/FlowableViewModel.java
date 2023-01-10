@@ -12,6 +12,7 @@ import android.view.View;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.BackpressureStrategy;
@@ -21,7 +22,8 @@ import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class FlowableViewModel extends ViewModel {
+public class
+FlowableViewModel extends ViewModel {
 
     public static final int DEFAULT_TAKE = 6;
     public static final int DEFAULT_DELAY = 1000;
@@ -134,7 +136,7 @@ public class FlowableViewModel extends ViewModel {
         */
         Flowable<Integer> copyFlowable = flowable.share();
         totals= copyFlowable
-                .toSortedList()
+                .toSortedList().onErrorReturnItem(new ArrayList<>(0))
                 .doOnSuccess(list-> postInLog("Totals list:\n"+list,false));
         totalSum = copyFlowable.reduce((acc, item) -> {
             acc += item;
@@ -144,7 +146,7 @@ public class FlowableViewModel extends ViewModel {
             */
             }).doOnSuccess(sum-> postInLog("Total sum:\n"+sum,false))
            /* Maybe может быть преобразован  в Single*/
-            .toSingle();
+                .toSingle().onErrorReturnItem(0);
         return flowable;
     }
 
