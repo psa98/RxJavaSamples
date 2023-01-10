@@ -19,7 +19,7 @@ import kotlin.random.Random;
 public class FlowableFragment extends Fragment {
 
 
-    public static final int MAX_RANDOM = 36;
+    public static final int MAX_RANDOM = 37;
     private FlowableViewModel viewModel;
     private FragmentFlowableBinding binding;
 

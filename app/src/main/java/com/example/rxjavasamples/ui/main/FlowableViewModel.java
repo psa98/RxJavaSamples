@@ -34,7 +34,6 @@ FlowableViewModel extends ViewModel {
     MutableLiveData<String> allTicks = new MutableLiveData<>("Not subscribed");
     MutableLiveData<String> logStringData = new MutableLiveData<>("...");
     String logString ="...";
-    int lastValue = 0;
     int counter = 0;
 
     /*переменная - хандлер подписки на  Flowable, позволяет выполнить отписку
@@ -50,7 +49,7 @@ FlowableViewModel extends ViewModel {
 
     /* создаваемый объект Flowable c изучаемыми свойствами
      */
-    Flowable<Integer> clickFlowable = initFlowable();
+    Flowable<Integer> clickFlowable;
     private Single<List<Integer>> totals;
     private Single<Integer> totalSum;
 
@@ -66,7 +65,7 @@ FlowableViewModel extends ViewModel {
                 /*
                  в примере отбираются только неповторяющиеся случайные числа поступающие
                  на вход в onNext. При поступлении повторяющегося обработка прекращается
-                 и обработка дальше по цепочке операторов не идет
+                 и обработка дальше по цепочке операторов не идет, клик не засчитан
                 */
                 .distinct()
                 /*
@@ -96,9 +95,8 @@ FlowableViewModel extends ViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(i -> {
                     counter++;
-                    lastValue = i;
                     allTicks.postValue("Ticks count = "+counter+
-                            ", last random value =" + lastValue);
+                            ", last random value =" + i);
                 /* Дополнительный оператор, выполняющий полезную обработку поступающих данных
                  *  В данном случае выполняется вывод данных в лог имитирущий
                  *  медленную их обработку на пуле фоновых потоков
@@ -117,7 +115,6 @@ FlowableViewModel extends ViewModel {
                  */
                 .doOnComplete(() -> {
                     allTicks.postValue("Final ticks count =" + counter + "\nDone! ");
-                    lastValue = 0;
                     Log.i(TAG, "Thread: ="+Thread.currentThread());
                     postInLog("Done! ===========",false);
                     resubscribe();
@@ -126,7 +123,6 @@ FlowableViewModel extends ViewModel {
                      */
                 }).doOnError(e -> {
                     allTicks.postValue("Got ERROR =" + e.toString());
-                    lastValue = 0;
                     resubscribe();
 
                 })
@@ -137,22 +133,21 @@ FlowableViewModel extends ViewModel {
                 .onErrorComplete();
 
         /* Для данного Flowable предполагается создать два сцепленных Single, получающих итоги -
-        *  список всех  значений и сумму. Это можно сделать через share()
+        *  список всех  значений Integer и сумму. Это можно сделать через share()
         *  Одно значение могло бы произведено непосредственно, через точку,
-        * totals= flowable
-                .toSortedList()
-        *
-        *  но второй Single от того же объекта никогда не получил бы onComplete.
+        * totals= flowable.toSortedList()
+         *  но второй последовательный Single от того же объекта никогда не получил бы onComplete.
         */
         Flowable<Integer> copyFlowable = flowable.share();
         totals= copyFlowable
                 .toSortedList().onErrorReturnItem(new ArrayList<>(0))
                 .doOnSuccess(list-> postInLog("Totals list:\n"+list,false));
-        totalSum = copyFlowable.reduce((acc, item) -> {
-            acc += item;
-            return acc;
+
+        totalSum = copyFlowable.reduce((sum, item) -> {
+            sum += item;
+            return sum;
             /*Maybe/Single объект имеет сокращенный набор операторов, в частности doOnSuccess(value)
-            *  вместо doOnNext|onComplete, который у Maybe может быть никогда не вызван
+            *  вместо doOnNext|onComplete, который у Maybe может быть никогда и не вызван
             */
             }).doOnSuccess(sum-> postInLog("Total sum:\n"+sum,false))
            /* Maybe может быть преобразован  в Single*/
@@ -173,6 +168,7 @@ FlowableViewModel extends ViewModel {
     }
 
     void startFlow(){
+        clickFlowable =initFlowable();
         dispose = clickFlowable.subscribe();
         totals.subscribe();
         totalSum.subscribe();
@@ -202,7 +198,7 @@ FlowableViewModel extends ViewModel {
 
             if (dispose != null && !dispose.isDisposed())
                 dispose.dispose();
-            clickFlowable =initFlowable(); //подписываемся с новыми параметрами
+             //подписываемся с новыми параметрами
             startFlow();
         }, RESUBSCRIBE_TIME);
         //переподписка через 1 секундy
