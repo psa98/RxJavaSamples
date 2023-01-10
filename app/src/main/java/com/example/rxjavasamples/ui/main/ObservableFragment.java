@@ -16,22 +16,22 @@ import com.example.rxjavasamples.databinding.FragmentObservableBinding;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ObserverFragment extends Fragment {
+public class ObservableFragment extends Fragment {
 
 
     int clickCounter = 0;
 
-    private ObserverViewModel viewModel;
+    private ObservableViewModel viewModel;
     private FragmentObservableBinding binding;
 
-    public static ObserverFragment newInstance() {
-        return new ObserverFragment();
+    public static ObservableFragment newInstance() {
+        return new ObservableFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(ObserverViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ObservableViewModel.class);
     }
 
     @Override
@@ -51,19 +51,22 @@ public class ObserverFragment extends Fragment {
     }
 
     private void initListeners() {
+        // по нажатию кнопки on Next в Observable будет проброшено событие onNext
         binding.clickButton.setOnClickListener(v -> {
             reloadParams();
-            viewModel.onClick(v, 1);
+            viewModel.onClick(v);
         });
+        // по нажатию кнопки Force Error в Observable будет проброшено событие onError
         binding.errorButton.setOnClickListener(v -> {
             reloadParams();
             clickCounter = 0;
-            viewModel.onClick(v, 0);
+            viewModel.onClick(v);
         });
+        // по нажатию кнопки On Complete в Observable будет проброшено событие onComplete
         binding.completeButton.setOnClickListener(v -> {
             reloadParams();
             clickCounter = 0;
-            viewModel.onClick(v, 0);
+            viewModel.onClick(v);
         });
     }
 
@@ -75,7 +78,10 @@ public class ObserverFragment extends Fragment {
     }
 
 
-
+    /*
+     * Загружаем параметры Observable в VM, новые параметры станут действительны после
+     * пересоздания, после onComplete|onError
+     */
     @SuppressWarnings("ConstantConditions")
     private void reloadParams() {
         try {
@@ -100,6 +106,10 @@ public class ObserverFragment extends Fragment {
         }
     }
 
+    /*
+     * не забываем подписываться, Flowable|Observable работают "лениво" и до вызова
+     * subscribe() ничего не делают.
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -108,6 +118,11 @@ public class ObserverFragment extends Fragment {
         viewModel.subscribe();
     }
 
+    /*
+     * не забываем отписываться согласно жц и освобождать ресурсы, при передаче событий
+     * в ui из Flowable|Observable андроида приложение может упасть если событие
+     * к отображению придет в уничтоженный элемент ui
+     */
     @Override
     public void onStop() {
         super.onStop();

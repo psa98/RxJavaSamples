@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#fff4f0"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout"
@@ -7,19 +8,152 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.FlowableFragment">
 
+
     <TextView
         android:id="@+id/section_label"
+        style="@style/TextAppearance.Material3.BodyLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
-        style="@style/TextAppearance.Material3.HeadlineMedium"
-        android:text="RxJava Observers"
+        android:text="RxJava Flowable"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@+id/constraintLayout"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1" />
+
+
+    <TextView
+        android:id="@+id/ticks_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.Material3.BodyLarge"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:text="All Ticks count = 0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/section_label" />
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_margin="12dp"
+        android:id="@+id/how_many_skipped_layout"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:hint="Skip how many first clicks? /see skip() operator/"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ticks_count">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/how_many_skipped"
+            android:background="@color/white"
+            style="@style/TextAppearance.Material3.BodyMedium"
+            android:layout_width="match_parent"
+            android:gravity="end"
+            android:text="0"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_margin="12dp"
+        android:id="@+id/how_many_total_layout"
+        android:layout_width="match_parent"
+        android:hint="How many total clicks accepted? /see take() operator/"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/how_many_skipped_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/how_many_clicks"
+            android:background="@color/white"
+            style="@style/TextAppearance.Material3.BodyMedium"
+            android:layout_width="match_parent"
+            android:gravity="end"
+            android:text="6"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_margin="12dp"
+        android:id="@+id/delay_layout"
+        android:layout_width="match_parent"
+        android:hint="How long each click processed, ms"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/how_many_total_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/delay"
+            android:background="@color/white"
+            android:gravity="end"
+            style="@style/TextAppearance.Material3.BodyMedium"
+            android:layout_width="match_parent"
+            android:text="1000"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/delay_layout"
+        app:layout_constraintBottom_toTopOf="@id/clickButton"
+
+        >
+
+        <TextView
+            android:id="@+id/clicksLog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            style="@style/TextAppearance.AppCompat.Body2"
+            />
+
+    </ScrollView>
+
+
+
+    <Button
+        android:id="@+id/clickButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="click"
+        android:text="On\n next"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/errorButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/errorButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:tag="error"
+        android:text="Force\n error"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/completeButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/clickButton" />
+
+    <Button
+        android:id="@+id/completeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="complete"
+        android:text="On\n complete"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/errorButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
