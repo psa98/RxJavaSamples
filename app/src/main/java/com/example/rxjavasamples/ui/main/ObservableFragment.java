@@ -20,10 +20,8 @@ public class ObservableFragment extends Fragment {
 
 
     int clickCounter = 0;
-
     private ObservableViewModel viewModel;
     private FragmentObservableBinding binding;
-
     public static ObservableFragment newInstance() {
         return new ObservableFragment();
     }
@@ -38,7 +36,6 @@ public class ObservableFragment extends Fragment {
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-
         binding = FragmentObservableBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -46,8 +43,6 @@ public class ObservableFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
     }
 
     private void initListeners() {

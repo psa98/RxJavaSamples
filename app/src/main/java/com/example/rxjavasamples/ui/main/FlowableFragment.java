@@ -17,12 +17,9 @@ import kotlin.random.Random;
 
 
 public class FlowableFragment extends Fragment {
-
-
     public static final int MAX_RANDOM = 37;
     private FlowableViewModel viewModel;
     private FragmentFlowableBinding binding;
-
     public static FlowableFragment newInstance() {
         return new FlowableFragment();
     }
@@ -75,8 +72,6 @@ public class FlowableFragment extends Fragment {
                 value -> binding.clicksLog.setText(value));
     }
 
-
-
     /*
     * Загружаем параметры Flowable в VM, новые параметры станут действительны после
     * пересоздания, после onComplete|onError
@@ -93,7 +88,6 @@ public class FlowableFragment extends Fragment {
             viewModel.takeParam = 6; //min number
             binding.howManyClicks.setText("6");
         }
-
         if (viewModel.delayParam <=0) {
             viewModel.delayParam = 0;
             binding.delay.setText("0");

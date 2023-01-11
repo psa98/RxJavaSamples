@@ -35,24 +35,20 @@ FlowableViewModel extends ViewModel {
     MutableLiveData<String> logStringData = new MutableLiveData<>("...");
     String logString ="...";
     int counter = 0;
-
     /*переменная - хандлер подписки на  Flowable, позволяет выполнить отписку
      * при необходимости
      */
     Disposable dispose;
-
     /*
      *эта переменная (интерфейс) передается во Flowable при создании, на ней
      * будет осуществляться вызов onNext(Integer i), onComplete().
      */
     FlowableEmitter<Integer> keyObserver;
-
     /* создаваемый объект Flowable c изучаемыми свойствами
      */
     Flowable<Integer> clickFlowable;
     private Single<List<Integer>> totals;
     private Single<Integer> totalSum;
-
     Flowable<Integer> initFlowable() {
         counter=0;
         Flowable<Integer> flowable = Flowable
@@ -108,7 +104,6 @@ FlowableViewModel extends ViewModel {
                             i, timestampDateShort());
                     postInLog (s,true);
                 })
-
                 /* Завершающий оператор. После вызова onComplete повторная передача
                  * onNext будет игнорироваться, повторные onComplete|onError вызовут
                  * ошибку. Операторы выполняются в последнем указанном потоке
@@ -124,11 +119,10 @@ FlowableViewModel extends ViewModel {
                 }).doOnError(e -> {
                     allTicks.postValue("Got ERROR =" + e.toString());
                     resubscribe();
-
                 })
                 /* Оператор варианта действий по итогам onError. В данном случае
                     ошибка дальше не идет, а превращается в  вызов OnComplete,
-                    есть и другие варианты
+                    есть и другие варианты обработки
                  */
                 .onErrorComplete();
 
@@ -183,19 +177,16 @@ FlowableViewModel extends ViewModel {
         if (tag.equals("error")) {
             if (keyObserver != null && !keyObserver.isCancelled())
                 keyObserver.onError(new IllegalStateException());
-
         }
         if (tag.equals("complete")) {
             if (keyObserver != null && !keyObserver.isCancelled())
                 keyObserver.onComplete();
-
         }
     }
 
     private void resubscribe() {
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed((Runnable) () -> {
-
+        handler.postDelayed(() -> {
             if (dispose != null && !dispose.isDisposed())
                 dispose.dispose();
              //подписываемся с новыми параметрами

@@ -31,9 +31,6 @@ public class ObservableViewModel extends ViewModel {
     MutableLiveData<String> logStringData = new MutableLiveData<>("...");
     String logString ="...";
     int lastValue = 0;
-
-
-
     /*переменная - хандлер подписки на  Observable, позволяет выполнить отписку
      * при необходимости
      */
@@ -43,7 +40,6 @@ public class ObservableViewModel extends ViewModel {
      * будет осуществляться вызов onNext(Integer i), onComplete().
      */
     ObservableEmitter<Integer> keyObserver;
-
     /* создаваемый объект Observable  c изучаемыми свойствами
      */
     Observable<Integer> clickObservable = initObservable();
@@ -66,7 +62,6 @@ public class ObservableViewModel extends ViewModel {
                 *onNext, завершая работу.
                 */
             .take(takeParam)
-
                 /*
                 Этот оператор вызывается при подписке, позволяя сохранить Disposable
                 и отслеживать жизненный цикл Flowable/Observable
@@ -100,17 +95,17 @@ public class ObservableViewModel extends ViewModel {
                  *   есть и другие варианты
                  */
             }).onErrorComplete();
-
         /* Исходный объект работает с Integer, в данном случае оператором map создается
          * сцепленый Observable<String>, в onDoNext которого будут приходить строки,
          * полученные функцией преобразования.
-         *
          */
     chainedObservable = observable
             .map(integer -> String.format("Click# %d %s", lastValue, timestampDateShort()))
             .doOnNext(string->{
                 /*
-                Запись ведется в лог внизу экрана
+                 * ( используется  инкрементируемый в модели lastValue вместо передаваемого integer поскольку
+                 *  в данном примере передаваемый из фрагмента  integer всегда единица)
+                 *  Запись ведется в лог внизу экрана
                  */
                     Log.i(TAG, "mapped observable - click registered:"+string);
                     logString="\n"+string+logString;
@@ -119,9 +114,7 @@ public class ObservableViewModel extends ViewModel {
                     logString = "\n" + "Done! ==================" + "\n" + logString;
                     logStringData.postValue(logString);
             });
-
-
-    return observable;
+   return observable;
     }
 
     void subscribe() {
@@ -150,7 +143,7 @@ public class ObservableViewModel extends ViewModel {
 
     private void resubscribe() {
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed((Runnable) () -> {
+        handler.postDelayed(() -> {
             if (dispose != null && !dispose.isDisposed())
                 dispose.dispose();
             clickObservable =initObservable(); //подписываемся с новыми параметрами
