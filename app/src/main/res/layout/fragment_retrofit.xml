@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/clickButton"
+        app:layout_constraintBottom_toTopOf="@id/errorButton"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/section_label"
         >
