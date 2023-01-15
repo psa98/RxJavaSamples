@@ -31,7 +31,7 @@ public class ObservableViewModel extends ViewModel {
     MutableLiveData<String> logStringData = new MutableLiveData<>("...");
     String logString ="...";
     int lastValue = 0;
-    /*переменная - хандлер подписки на  Observable, позволяет выполнить отписку
+    /*переменная - хандлер подписки на Observable, позволяет выполнить отписку
      * при необходимости
      */
     Disposable dispose;
@@ -43,7 +43,7 @@ public class ObservableViewModel extends ViewModel {
     /* создаваемый объект Observable  c изучаемыми свойствами
      */
     Observable<Integer> clickObservable = initObservable();
-    /* сцепленный с ним  объект Observable, получающий те же события
+    /* сцепленный с ним объект Observable, получающий те же события
      */
     Observable<String> chainedObservable;
     @SuppressLint("DefaultLocale")
@@ -103,8 +103,8 @@ public class ObservableViewModel extends ViewModel {
             .map(integer -> String.format("Click# %d %s", lastValue, timestampDateShort()))
             .doOnNext(string->{
                 /*
-                 * ( используется  инкрементируемый в модели lastValue вместо передаваемого integer поскольку
-                 *  в данном примере передаваемый из фрагмента  integer всегда единица)
+                 * ( используется инкрементируемый в модели lastValue вместо передаваемого integer поскольку
+                 *  в данном примере передаваемый из фрагмента integer всегда единица)
                  *  Запись ведется в лог внизу экрана
                  */
                     Log.i(TAG, "mapped observable - click registered:"+string);

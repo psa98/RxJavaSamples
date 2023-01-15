@@ -16,7 +16,7 @@ import com.example.rxjavasamples.R;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
+    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2,R.string.tab_text_3};
     private final Context mContext;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
@@ -27,8 +27,14 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        if (position == 0) return ObservableFragment.newInstance();
-        else  return FlowableFragment.newInstance();
+        switch (position) {
+            case 0:
+                return ObservableFragment.newInstance();
+            case 1:
+                return FlowableFragment.newInstance();
+            default:
+                return RetrofitFragment.newInstance();
+        }
     }
 
     @Nullable
@@ -39,6 +45,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 }
