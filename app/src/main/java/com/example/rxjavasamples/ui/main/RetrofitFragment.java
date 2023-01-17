@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.rxjavasamples.R;
 import com.example.rxjavasamples.databinding.FragmentRetrofitBinding;
 
 
@@ -49,13 +50,17 @@ public class RetrofitFragment extends Fragment {
         * https://jsonplaceholder.typicode.com
         *
         * */
-        binding.clickButton.setOnClickListener(v -> viewModel.reloadPost());
+        binding.clickButton.setOnClickListener(v ->{
+                binding.randomPosts.setText(R.string.loading);
+                viewModel.reloadPost();
+        });
 
         /* По нажатию кнопки запрашивается ошибочный адрес API
          *
          * */
-        binding.errorButton.setOnClickListener(v -> viewModel.forceErrorRequest());
-
+        binding.errorButton.setOnClickListener(v -> {
+            binding.randomPosts.setText(R.string.loading);
+            viewModel.forceErrorRequest();});
 
     }
 
@@ -78,12 +83,15 @@ public class RetrofitFragment extends Fragment {
     /*
      * не забываем отписываться согласно жц и освобождать ресурсы, при передаче событий
      * в ui из Flowable|Observable андроида приложение может упасть если событие
-     * к отображению придет в уничтоженный элемент ui
+     * к отображению придет в уничтоженный элемент ui.
+     * Вызов dispose() в данном случае так же остановит загрузку данных и дальнейшую
+     *  обработку, передавшись вверх по цепочке
      */
     @Override
-    public void onStop() {
-        super.onStop();
-        //if (viewModel.dispose != null) viewModel.dispose.dispose();
+    public void onPause() {
+        super.onPause();
+        if (viewModel.subscription != null && !viewModel.subscription.isDisposed())
+            viewModel.subscription.dispose();
     }
 
     @Override

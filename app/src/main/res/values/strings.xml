@@ -3,4 +3,5 @@
     <string name="tab_text_1">RxJava Observable\nSample</string>
     <string name="tab_text_2">RxJava Flowable\nSample</string>
     <string name="tab_text_3">RxJava with Retrofit\nsample</string>
+    <string name="loading">Loading…</string>
 </resources>
