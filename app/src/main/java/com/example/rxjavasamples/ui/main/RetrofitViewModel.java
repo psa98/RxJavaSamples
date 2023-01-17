@@ -20,8 +20,7 @@ public class RetrofitViewModel extends ViewModel {
 
     MutableLiveData<String> liveDataWithPostText =
             new MutableLiveData<>("Load random post");
-
-    Disposable subscription;
+    Disposable subscription = null;
 
 
 
@@ -35,8 +34,7 @@ public class RetrofitViewModel extends ViewModel {
         * Созданный объект для вызова запроса хранится лениво, не активируется до subscribe()
         *  и может быть модифицирован дополнительными операторами или сцеплен с другими.
         */
-        if (subscription != null && !subscription.isDisposed())
-            subscription.dispose();
+        unsubscribeIfNeeded(subscription);
         subscription= posts.doOnNext(result-> liveDataWithPostText.postValue(result.toString()))
                 .doOnError(error-> liveDataWithPostText.postValue(error.toString()))
                 .doOnDispose(()->Log.i(TAG,"Disposed!" ))
@@ -54,8 +52,7 @@ public class RetrofitViewModel extends ViewModel {
 
     public void forceErrorRequest() {
         Observable <List<PostName>> posts = RetrofitRepository.getPostTitlesWithError();
-        if (subscription != null && !subscription.isDisposed())
-            subscription.dispose();
+        unsubscribeIfNeeded(subscription);
         subscription = posts.doOnNext(result-> liveDataWithPostText.postValue(result.toString()))
                 .doOnError(error-> liveDataWithPostText.postValue(error.toString()))
                 .doOnDispose(()->Log.i(TAG,"Disposed!" ))
@@ -63,7 +60,10 @@ public class RetrofitViewModel extends ViewModel {
                 .subscribe();
     }
 
-
+    private void unsubscribeIfNeeded(Disposable subscription) {
+        if (subscription != null && !subscription.isDisposed())
+            subscription.dispose();
+    }
 
 
 }
