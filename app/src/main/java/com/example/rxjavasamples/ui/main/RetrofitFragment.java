@@ -90,8 +90,8 @@ public class RetrofitFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (viewModel.subscription != null && !viewModel.subscription.isDisposed())
-            viewModel.subscription.dispose();
+        if (viewModel.currentSubscription != null && !viewModel.currentSubscription.isDisposed())
+            viewModel.currentSubscription.dispose();
     }
 
     @Override
