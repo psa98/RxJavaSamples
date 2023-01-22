@@ -55,7 +55,7 @@ public class RetrofitFragment extends Fragment {
                 viewModel.reloadPost();
         });
 
-        /* По нажатию кнопки запрашивается ошибочный адрес API
+        /* По нажатию кнопки специально запрашивается ошибочный адрес API
          *
          * */
         binding.errorButton.setOnClickListener(v -> {
