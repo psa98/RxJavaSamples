@@ -22,7 +22,7 @@ public class RetrofitRepository {
      * результат полученного списка id генерит цепочку обращений к серверу для каждого id
      *
      */
-    public static Observable<List<String>> getPostTitles(int from,int until) {
+    public static Observable<List<String>> getPostTitlesRange(int from, int until) {
         return RetrofitClient.getInstance()
                 .getApi()
                 .getAllPostsAsObservable()
@@ -42,9 +42,6 @@ public class RetrofitRepository {
     public static Observable<List<PostName>> getPostTitlesWithError() {
         return RetrofitClient.getInstance()
                 .getApi()
-                .getAllPostsWithError();
-
+                .getApiError();
     }
-
-
 }

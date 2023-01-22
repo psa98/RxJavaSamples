@@ -27,7 +27,7 @@ public class RetrofitViewModel extends ViewModel {
     public void reloadPost() {
         int from = Default.nextInt(1,40);
         int count = Default.nextInt(1,50);
-        Observable <List<String>> posts = RetrofitRepository.getPostTitles(from,from+count);
+        Observable <List<String>> posts = RetrofitRepository.getPostTitlesRange(from,from+count);
         /* В получаемом от ретрофита объекте УЖЕ может быть проведена серьезная обработка
         * сырых полученных данных - к примеру в нашем случае полученный с сервера
         * список объектов преобразуется к списку Strings c фильтрацией.

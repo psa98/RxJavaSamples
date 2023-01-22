@@ -1,5 +1,7 @@
 package com.example.rxjavasamples.ui.main;
 
+import static com.example.rxjavasamples.ui.main.FlowableViewModel.MAX_RANDOM;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +19,7 @@ import kotlin.random.Random;
 
 
 public class FlowableFragment extends Fragment {
-    public static final int MAX_RANDOM = 37;
+
     private FlowableViewModel viewModel;
     private FragmentFlowableBinding binding;
     public static FlowableFragment newInstance() {
@@ -74,7 +76,7 @@ public class FlowableFragment extends Fragment {
 
     /*
     * Загружаем параметры Flowable в VM, новые параметры станут действительны после
-    * пересоздания, после onComplete|onError
+    * пересоздания, после onComplete/onError
     */
     @SuppressWarnings("ConstantConditions")
     private void reloadParams() {

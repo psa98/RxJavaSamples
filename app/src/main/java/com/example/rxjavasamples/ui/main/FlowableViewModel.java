@@ -26,6 +26,8 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class
 FlowableViewModel extends ViewModel {
 
+    //предположим что нам надо получить 6 уникальных случайных чисел от 1 до 36
+    public static final int MAX_RANDOM = 37;
     public static final int DEFAULT_TAKE = 6;
     public static final int DEFAULT_DELAY = 1000;
     public static final int RESUBSCRIBE_TIME = 1000;
@@ -35,7 +37,7 @@ FlowableViewModel extends ViewModel {
     MutableLiveData<String> logStringData = new MutableLiveData<>("...");
     String logString ="...";
     int counter = 0;
-    /*переменная - хандлер подписки на  Flowable, позволяет выполнить отписку
+    /*переменная - хандлер подписки на Flowable, позволяет выполнить отписку
      * при необходимости
      */
     Disposable dispose;
@@ -127,16 +129,20 @@ FlowableViewModel extends ViewModel {
                 .onErrorComplete();
 
         /* Для данного Flowable предполагается создать два сцепленных Single, получающих итоги -
-        *  список всех  значений Integer и сумму. Это можно сделать через share()
-        *  Одно значение могло бы произведено непосредственно, через точку,
-        * totals= flowable.toSortedList()
-         *  но второй последовательный Single от того же объекта никогда не получил бы onComplete.
+        * список всех значений Integer и сумму. Это можно сделать через share()
+        * Одно значение могло бы произведено непосредственно, через точку,
+        * totals= flowable.toSortedList(), но второй последовательный Single от того же
+        * объекта никогда не получил бы onComplete.
         */
         Flowable<Integer> copyFlowable = flowable.share();
         totals= copyFlowable
                 .toSortedList().onErrorReturnItem(new ArrayList<>(0))
                 .doOnSuccess(list-> postInLog("Totals list:\n"+list,false));
 
+        /*  Оператор reduce выполняет итоговую операцию над результатом Flowable с накоплением
+        *   итога в "аккумуляторе".
+        *   Возвращает Maybe.
+        */
         totalSum = copyFlowable.reduce((sum, item) -> {
             sum += item;
             return sum;
@@ -162,6 +168,9 @@ FlowableViewModel extends ViewModel {
     }
 
     void startFlow(){
+        if (dispose != null && !dispose.isDisposed())
+            dispose.dispose();
+        //подписываемся с новыми параметрами
         clickFlowable =initFlowable();
         dispose = clickFlowable.subscribe();
         totals.subscribe();
@@ -186,12 +195,7 @@ FlowableViewModel extends ViewModel {
 
     private void resubscribe() {
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(() -> {
-            if (dispose != null && !dispose.isDisposed())
-                dispose.dispose();
-             //подписываемся с новыми параметрами
-            startFlow();
-        }, RESUBSCRIBE_TIME);
+        handler.postDelayed(this::startFlow, RESUBSCRIBE_TIME);
         //переподписка через 1 секундy
     }
 

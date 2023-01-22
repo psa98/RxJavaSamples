@@ -10,7 +10,7 @@ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
-    private static RetrofitClient INSTANCE;
+    private volatile static RetrofitClient INSTANCE;
     private final Retrofit retrofit;
 
     Gson gson = new GsonBuilder()
@@ -23,7 +23,7 @@ public class RetrofitClient {
                 .baseUrl(BASE_URL)
                 .client(new OkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                /* Отличия при использовании Рх с Ретрофит
+                /* Отличия при использовании Rх с Ретрофит:
                  * добавляем .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                  */
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())

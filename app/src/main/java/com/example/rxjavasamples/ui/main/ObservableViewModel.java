@@ -54,7 +54,7 @@ public class ObservableViewModel extends ViewModel {
             .debounce(debounceParam, TimeUnit.MILLISECONDS)
                 /*
                  *Этот оператор пропускает первые n событий onNext.
-                 * Порядок операторов играет значение!
+                 * Порядок операторов имеет значение!
                  */
                 .skip(skipParam)
                 /*
@@ -63,8 +63,8 @@ public class ObservableViewModel extends ViewModel {
                 */
             .take(takeParam)
                 /*
-                Этот оператор вызывается при подписке, позволяя сохранить Disposable
-                и отслеживать жизненный цикл Flowable/Observable
+                *Этот оператор вызывается при подписке, позволяя сохранить Disposable
+                * и отслеживать жизненный цикл Flowable/Observable
                 */
             .doOnSubscribe(disposable -> allTicks.postValue("Subscribed, waiting"))
                 /* Основной оператор, выполняющий полезную обработку поступающих данных
@@ -91,10 +91,11 @@ public class ObservableViewModel extends ViewModel {
                 lastValue = 0;
                 resubscribe();
                 /* Оператор варианта действий по итогам onError. В данном случае
-                 *    ошибка дальше не идет, а превращается в  вызов OnComplete,
+                 *    ошибка дальше не идет, а превращается в вызов OnComplete,
                  *   есть и другие варианты
                  */
             }).onErrorComplete();
+
         /* Исходный объект работает с Integer, в данном случае оператором map создается
          * сцепленый Observable<String>, в onDoNext которого будут приходить строки,
          * полученные функцией преобразования.
@@ -103,8 +104,9 @@ public class ObservableViewModel extends ViewModel {
             .map(integer -> String.format("Click# %d %s", lastValue, timestampDateShort()))
             .doOnNext(string->{
                 /*
-                 * ( используется инкрементируемый в модели lastValue вместо передаваемого integer поскольку
-                 *  в данном примере передаваемый из фрагмента integer всегда единица)
+                 * Используется инкрементируемый в модели lastValue вместо передаваемого
+                 *  integer поскольку в данном примере передаваемый из фрагмента integer
+                 *  всегда единица
                  *  Запись ведется в лог внизу экрана
                  */
                     Log.i(TAG, "mapped observable - click registered:"+string);
@@ -119,8 +121,10 @@ public class ObservableViewModel extends ViewModel {
 
     void subscribe() {
         if (dispose == null || dispose.isDisposed()){
+            clickObservable = initObservable(); //подписываемся с новыми параметрами
             dispose = clickObservable.subscribe();
-            chainedObservable.subscribe();}
+            chainedObservable.subscribe();
+        }
     }
 
     void onClick(View button) {
@@ -143,13 +147,7 @@ public class ObservableViewModel extends ViewModel {
 
     private void resubscribe() {
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(() -> {
-            if (dispose != null && !dispose.isDisposed())
-                dispose.dispose();
-            clickObservable =initObservable(); //подписываемся с новыми параметрами
-            dispose = clickObservable.subscribe();
-            chainedObservable.subscribe();
-        }, RESUBSCRIBE_TIME);
+        handler.postDelayed(this::subscribe, RESUBSCRIBE_TIME);
         //переподписка осуществляется через 2 секунды после OnError, OnComplete.
     }
 

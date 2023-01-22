@@ -12,9 +12,6 @@ import retrofit2.http.Path;
 public interface Api {
 
 
-    @GET("/posts/{id}")
-    Call<Post> getPostById(@Path("id") int id);
-
     @GET("posts/")
     Call<List<PostName>> getAllPosts();
 
@@ -24,12 +21,16 @@ public interface Api {
     Observable<List<PostName>> getAllPostsAsObservable();
 
     @GET("postsZZZ/")
-    Observable<List<PostName>> getAllPostsWithError();
+    Observable<List<PostName>> getApiError();
+
+
+    @GET("/posts/{id}")
+    Call<Post> getPostById(@Path("id") int id);
+
 
     @GET("/posts/{id}")
     Single<Post> getSinglePostById(@Path("id") int id);
 
-    @GET("/postsZZZ/{id}")
-    Call<Post> getPostByIdErrorPath(@Path("id") int id);
+
 
 }
