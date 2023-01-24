@@ -13,13 +13,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.rxjavasamples.databinding.FragmentObservableBinding;
 
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class ObservableFragment extends Fragment {
 
-
-    int clickCounter = 0;
     private ObservableViewModel viewModel;
     private FragmentObservableBinding binding;
     public static ObservableFragment newInstance() {
@@ -54,13 +49,12 @@ public class ObservableFragment extends Fragment {
         // по нажатию кнопки Force Error в Observable будет проброшено событие onError
         binding.errorButton.setOnClickListener(v -> {
             reloadParams();
-            clickCounter = 0;
+
             viewModel.onClick(v);
         });
         // по нажатию кнопки On Complete в Observable будет проброшено событие onComplete
         binding.completeButton.setOnClickListener(v -> {
             reloadParams();
-            clickCounter = 0;
             viewModel.onClick(v);
         });
     }

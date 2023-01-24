@@ -46,7 +46,7 @@ public class RetrofitFragment extends Fragment {
     }
 
     private void initListeners() {
-        /* По нажатию кнопки запрашивается случайное количество названий постов с
+        /* По нажатию кнопки, запрашивается случайное количество названий постов с
         * https://jsonplaceholder.typicode.com
         *
         * */
@@ -77,11 +77,10 @@ public class RetrofitFragment extends Fragment {
         super.onResume();
         initListeners();
         initObservers();
-        //viewModel.subscribe();
     }
 
     /*
-     * не забываем отписываться согласно жц и освобождать ресурсы, при передаче событий
+     * Не забываем отписываться согласно жц и освобождать ресурсы, при передаче событий
      * в ui из Flowable|Observable андроида приложение может упасть если событие
      * к отображению придет в уничтоженный элемент ui.
      * Вызов dispose() в данном случае так же остановит загрузку данных и дальнейшую

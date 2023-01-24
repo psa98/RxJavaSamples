@@ -27,8 +27,8 @@ public class ObservableViewModel extends ViewModel {
     int debounceParam = DEFAULT_DEBOUNCE;
     int takeParam = DEFAULT_TAKE;
     int skipParam = DEFAULT_SKIP;
-    MutableLiveData<String> allTicks = new MutableLiveData<>("Not subscribed");
-    MutableLiveData<String> logStringData = new MutableLiveData<>("...");
+    final MutableLiveData<String> allTicks = new MutableLiveData<>("Not subscribed");
+    final MutableLiveData<String> logStringData = new MutableLiveData<>("...");
     String logString ="...";
     int lastValue = 0;
     /*переменная - хандлер подписки на Observable, позволяет выполнить отписку
@@ -97,7 +97,7 @@ public class ObservableViewModel extends ViewModel {
             }).onErrorComplete();
 
         /* Исходный объект работает с Integer, в данном случае оператором map создается
-         * сцепленый Observable<String>, в onDoNext которого будут приходить строки,
+         * сцепленный Observable<String>, в onDoNext которого будут приходить строки,
          * полученные функцией преобразования.
          */
     chainedObservable = observable

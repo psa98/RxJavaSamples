@@ -33,8 +33,8 @@ FlowableViewModel extends ViewModel {
     public static final int RESUBSCRIBE_TIME = 1000;
     int delayParam = DEFAULT_DELAY;
     int takeParam = DEFAULT_TAKE;
-    MutableLiveData<String> allTicks = new MutableLiveData<>("Not subscribed");
-    MutableLiveData<String> logStringData = new MutableLiveData<>("...");
+    final MutableLiveData<String> allTicks = new MutableLiveData<>("Not subscribed");
+    final MutableLiveData<String> logStringData = new MutableLiveData<>("...");
     String logString ="...";
     int counter = 0;
     /*переменная - хандлер подписки на Flowable, позволяет выполнить отписку
@@ -61,7 +61,7 @@ FlowableViewModel extends ViewModel {
                 */
                 BackpressureStrategy.BUFFER)
                 /*
-                 в примере отбираются только неповторяющиеся случайные числа поступающие
+                 В примере отбираются только неповторяющиеся случайные числа поступающие
                  на вход в onNext. При поступлении повторяющегося обработка прекращается
                  и обработка дальше по цепочке операторов не идет, клик не засчитан
                 */
@@ -123,7 +123,7 @@ FlowableViewModel extends ViewModel {
                     resubscribe();
                 })
                 /* Оператор варианта действий по итогам onError. В данном случае
-                    ошибка дальше не идет, а превращается в  вызов OnComplete,
+                    ошибка дальше не идет, а превращается в вызов OnComplete,
                     есть и другие варианты обработки
                  */
                 .onErrorComplete();
@@ -196,7 +196,7 @@ FlowableViewModel extends ViewModel {
     private void resubscribe() {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(this::startFlow, RESUBSCRIBE_TIME);
-        //переподписка через 1 секундy
+        //переподписка через 1 секунду
     }
 
 }

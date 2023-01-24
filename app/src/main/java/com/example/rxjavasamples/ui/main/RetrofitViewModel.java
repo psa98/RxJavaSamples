@@ -18,7 +18,7 @@ import io.reactivex.rxjava3.disposables.Disposable;
 
 public class RetrofitViewModel extends ViewModel {
 
-    MutableLiveData<String> liveDataWithPostText =
+    final MutableLiveData<String> liveDataWithPostText =
             new MutableLiveData<>("Load random post");
     Disposable currentSubscription = null;
 

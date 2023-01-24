@@ -13,7 +13,7 @@ public class RetrofitClient {
     private volatile static RetrofitClient INSTANCE;
     private final Retrofit retrofit;
 
-    Gson gson = new GsonBuilder()
+    final Gson gson = new GsonBuilder()
             .setLenient()
             .create();
 
