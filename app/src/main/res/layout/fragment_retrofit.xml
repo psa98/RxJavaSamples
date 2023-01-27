@@ -18,8 +18,22 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="RxJava with Retrofit"
+        android:gravity="center_vertical"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@+id/constraintLayout"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <TextView
+        android:id="@+id/clock"
+        style="@style/TextAppearance.Material3.BodyLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="bottom"
+        android:layout_marginEnd="16dp"
+        android:text="00:00:00"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/section_label"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1" />
 
@@ -31,7 +45,8 @@
         app:layout_constraintBottom_toTopOf="@id/errorButton"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/section_label"
-        >
+        app:layout_constraintVertical_bias="1.0">
+
         <TextView
             android:id="@+id/random_posts"
             style="@style/TextAppearance.Material3.BodyLarge"
@@ -40,7 +55,6 @@
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:text="Load data" />
     </ScrollView>
-
 
     <Button
         android:id="@+id/clickButton"

@@ -1,5 +1,7 @@
 package com.example.rxjavasamples.ui.main;
 
+import static java.text.DateFormat.getTimeInstance;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.rxjavasamples.R;
 import com.example.rxjavasamples.databinding.FragmentRetrofitBinding;
+
+import java.text.DateFormat;
 
 
 /**
@@ -65,10 +69,12 @@ public class RetrofitFragment extends Fragment {
     }
 
     private void initObservers() {
-        viewModel.liveDataWithPostText.observe(this.getViewLifecycleOwner(),
-                value -> binding.randomPosts.setText(value));
-
-    }
+        viewModel.liveDataWithPostText.observe(this.getViewLifecycleOwner(), value ->
+            binding.randomPosts.setText(value));
+        viewModel.liveDataClockView.observe(this.getViewLifecycleOwner(), value ->{
+            DateFormat timeFormat = getTimeInstance(DateFormat.MEDIUM);
+            binding.clock.setText(timeFormat.format(value));});
+        }
 
 
 
