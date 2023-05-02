@@ -82,6 +82,7 @@ public class ObservableViewModel extends ViewModel {
             }).doOnComplete(() -> {
                 allTicks.postValue("Final ticks count =" + lastValue + "\nDone! ");
                 lastValue = 0;
+                dispose.dispose();
                 resubscribe();
                 /* Оператор обработки onError. Факт наличия обработки не ведет автоматически
                  к "проглатыванию" ошибки! Это поведение определяется другими операторами
@@ -89,6 +90,7 @@ public class ObservableViewModel extends ViewModel {
             })  .doOnError(e -> {
                 allTicks.postValue("Got ERROR =" + e.toString());
                 lastValue = 0;
+                dispose.dispose();
                 resubscribe();
                 /* Оператор варианта действий по итогам onError. В данном случае
                  *    ошибка дальше не идет, а превращается в вызов OnComplete,

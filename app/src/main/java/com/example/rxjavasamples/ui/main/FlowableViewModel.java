@@ -92,6 +92,7 @@ FlowableViewModel extends ViewModel {
                  */
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(i -> {
+                    Log.e(TAG, "Observed on ="+Thread.currentThread());
                     counter++;
                     allTicks.postValue("Ticks count = "+counter+
                             ", last random value =" + i);
