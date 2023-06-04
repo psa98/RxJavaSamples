@@ -26,17 +26,17 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class
 FlowableViewModel extends ViewModel {
 
-    //предположим что нам надо получить 6 уникальных случайных чисел от 1 до 36
-    public static final int MAX_RANDOM = 37;
-    public static final int DEFAULT_TAKE = 6;
-    public static final int DEFAULT_DELAY = 1000;
-    public static final int RESUBSCRIBE_TIME = 1000;
+
+
+    private static final int DEFAULT_TAKE = 6;
+    private static final int DEFAULT_DELAY = 1000;
+    private static final int RESUBSCRIBE_TIME = 1000;
     int delayParam = DEFAULT_DELAY;
     int takeParam = DEFAULT_TAKE;
     final MutableLiveData<String> allTicks = new MutableLiveData<>("Not subscribed");
     final MutableLiveData<String> logStringData = new MutableLiveData<>("...");
     String logString ="...";
-    int counter = 0;
+    private int counter = 0;
     /*переменная - хандлер подписки на Flowable, позволяет выполнить отписку
      * при необходимости
      */

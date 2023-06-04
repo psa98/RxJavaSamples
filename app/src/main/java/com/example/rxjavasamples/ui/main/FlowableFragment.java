@@ -1,6 +1,5 @@
 package com.example.rxjavasamples.ui.main;
 
-import static com.example.rxjavasamples.ui.main.FlowableViewModel.MAX_RANDOM;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,7 +18,8 @@ import kotlin.random.Random;
 
 
 public class FlowableFragment extends Fragment {
-
+    //предположим что нам надо получить 6 уникальных случайных чисел от 1 до 36
+    private static final int MAX_RANDOM = 37;
     private FlowableViewModel viewModel;
     private FragmentFlowableBinding binding;
     public static FlowableFragment newInstance() {

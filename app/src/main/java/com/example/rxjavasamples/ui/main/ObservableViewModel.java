@@ -20,17 +20,17 @@ import io.reactivex.rxjava3.disposables.Disposable;
 
 public class ObservableViewModel extends ViewModel {
 
-    public static final int DEFAULT_TAKE = 15;
-    public static final int DEFAULT_DEBOUNCE = 200;
-    public static final int RESUBSCRIBE_TIME = 2000;
-    public static final int DEFAULT_SKIP = 1;
+    private static final int DEFAULT_TAKE = 15;
+    private static final int DEFAULT_DEBOUNCE = 200;
+    private static final int RESUBSCRIBE_TIME = 2000;
+    private static final int DEFAULT_SKIP = 1;
     int debounceParam = DEFAULT_DEBOUNCE;
     int takeParam = DEFAULT_TAKE;
     int skipParam = DEFAULT_SKIP;
     final MutableLiveData<String> allTicks = new MutableLiveData<>("Not subscribed");
     final MutableLiveData<String> logStringData = new MutableLiveData<>("...");
-    String logString ="...";
-    int lastValue = 0;
+    private String logString ="...";
+    private int lastValue = 0;
     /*переменная - хандлер подписки на Observable, позволяет выполнить отписку
      * при необходимости
      */
@@ -56,7 +56,7 @@ public class ObservableViewModel extends ViewModel {
                  *Этот оператор пропускает первые n событий onNext.
                  * Порядок операторов имеет значение!
                  */
-                .skip(skipParam)
+            .skip(skipParam)
                 /*
                 *Этот оператор сам вызывает onComplete после получения заданного количества
                 *onNext, завершая работу.
